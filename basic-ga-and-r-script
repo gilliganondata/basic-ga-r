@@ -1,0 +1,23 @@
+# Load up the googleAnalyticsR package. This is the package that has the smarts to actually
+# connect to and pull data from the Google Analytics API
+library(googleAnalyticsR)
+
+# Authorize Google Analytics. This should launch a browser and require you to
+# log in.
+ga_auth()
+
+# Perform a simple query and assign the results to a "data frame" called ga_data.
+# 'ga_data' is just an arbitrary name, while 'google_analytics_4' is a function from
+# the googleAnalyticsR package.
+ga_data <- google_analytics_4(viewId = "[your view ID]",
+                              date_range = c(Sys.Date()-7, Sys.Date()-1),
+                              metrics = c("users", "sessions","pageviews"),
+                              dimensions = "date", 
+                              anti_sample = TRUE)
+
+# Create a simple line chart.
+# This is putting the "date" values from ga_data as the x "values," the number of sessions
+# (the "sessions" value) as the y values, and is then specifying that it should be plotted
+# as a line chart (type="l"). The "ylim" forces a 0-base y-axis by specifying a "vector"
+# that goes from 0 to the maximum value for sessions in the gaData data frame.
+plot(ga_data$date,ga_data$sessions,type="l",ylim=c(0,max(ga_data$sessions)))
